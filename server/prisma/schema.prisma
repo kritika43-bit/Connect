@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int            @id @default(autoincrement())
+  email            String?        @unique
+  phone            String?        @unique
+  password         String?
+  otp              String?
+  otpExpiry        DateTime?
+  role             Role           @default(ALUMNI)
+  profile          Profile?
+  posts            Post[]
+  jobs             Job[]
+  events           Event[]        @relation("EventAuthor")
+  attending        Event[]        @relation("EventAttendees")
+  comments         Comment[]
+  sentMessages     Message[]      @relation("SentMessages")
+  receivedMessages Message[]      @relation("ReceivedMessages")
+  notifications    Notification[]
+  applications     JobApplication[]
+  isVerified       Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Profile {
+  id             Int     @id @default(autoincrement())
+  userId         Int     @unique
+  user           User    @relation(fields: [userId], references: [id])
+  firstName      String
+  lastName       String
+  graduationYear Int?
+  currentJob     String?
+  company        String?
+  avatarUrl      String?
+  bio            String? @db.Text
+  linkedinUrl    String?
+  isPublic       Boolean @default(true)
+}
+
+model Job {
+  id          Int      @id @default(autoincrement())
+  title       String
+  company     String
+  location    String
+  description String   @db.Text
+  applyLink   String?
+  authorId    Int
+  author      User     @relation(fields: [authorId], references: [id])
+  applications JobApplication[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobApplication {
+  id        Int      @id @default(autoincrement())
+  jobId     Int
+  job       Job      @relation(fields: [jobId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+
+  @@unique([jobId, userId])
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text
+  date        DateTime
+  location    String
+  authorId    Int
+  author      User     @relation("EventAuthor", fields: [authorId], references: [id])
+  attendees   User[]   @relation("EventAttendees")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  content   String    @db.Text
+  imageUrl  String?
+  authorId  Int
+  author    User      @relation(fields: [authorId], references: [id])
+  comments  Comment[]
+  likes     Json?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId Int
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  content    String   @db.Text
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  type      String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  STUDENT
+  ALUMNI
+  ADMIN
+}

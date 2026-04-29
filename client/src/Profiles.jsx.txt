@@ -1,0 +1,164 @@
+import { useState, useEffect } from "react";
+
+export default function Profile() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    bio: "",
+    company: "",
+    graduationYear: ""
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  // 🔵 Load existing profile (optional)
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/users/profile");
+        const data = await res.json();
+
+        setFormData({
+          name: data.name || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          bio: data.bio || "",
+          company: data.company || "",
+          graduationYear: data.graduationYear || ""
+        });
+      } catch (err) {
+        console.log("No existing profile");
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // 🟢 Handle input change
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // 🔴 Submit profile
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/users/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!res.ok) throw new Error("Failed");
+
+      const data = await res.json();
+
+      alert("Profile updated successfully ✅");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update profile ❌");
+    }
+
+    setLoading(false);
+  };
+
+  return (
+    <div className="p-6 w-full">
+      <h1 className="text-2xl font-bold mb-6">Profile</h1>
+
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded-lg p-6 space-y-4 max-w-2xl"
+      >
+        {/* Name */}
+        <div>
+          <label className="block mb-1">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="block mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+
+        {/* Phone */}
+        <div>
+          <label className="block mb-1">Phone</label>
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+
+        {/* Company */}
+        <div>
+          <label className="block mb-1">Company</label>
+          <input
+            type="text"
+            name="company"
+            value={formData.company}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+
+        {/* Graduation Year */}
+        <div>
+          <label className="block mb-1">Graduation Year</label>
+          <input
+            type="text"
+            name="graduationYear"
+            value={formData.graduationYear}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+          />
+        </div>
+
+        {/* Bio */}
+        <div>
+          <label className="block mb-1">Bio</label>
+          <textarea
+            name="bio"
+            value={formData.bio}
+            onChange={handleChange}
+            className="w-full border p-2 rounded"
+            rows="4"
+          />
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+        >
+          {loading ? "Saving..." : "Save Changes"}
+        </button>
+      </form>
+    </div>
+  );
+}
