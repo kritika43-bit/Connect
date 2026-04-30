@@ -1,10 +1,9 @@
 const express = require("express");
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prisma');
 const jwt = require('jsonwebtoken');
 const { upload, getSignedImageUrl } = require('../utils/upload');
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Auth middleware
 const authenticate = (req, res, next) => {
@@ -119,6 +118,23 @@ router.post("/profile/photo", authenticate, upload.single('avatar'), async (req,
   } catch (err) {
     console.error('Photo upload error:', err);
     res.status(500).json({ error: "Failed to upload photo" });
+  }
+});
+
+// UPDATE Account Info (Phone)
+router.post("/account", authenticate, async (req, res) => {
+  try {
+    const { phone } = req.body;
+    
+    await prisma.user.update({
+      where: { id: req.user.userId },
+      data: { phone }
+    });
+
+    res.json({ message: "Account updated successfully" });
+  } catch (err) {
+    console.error('Account update error:', err);
+    res.status(500).json({ error: "Failed to update account" });
   }
 });
 

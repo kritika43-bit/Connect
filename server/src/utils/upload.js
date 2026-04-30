@@ -15,13 +15,13 @@ const s3 = new S3Client({
 const getSignedImageUrl = async (key) => {
   if (!key) return null;
   // If it's already a full URL (not from our avatars/ folder), return it
-  if (key.startsWith('http') && !key.includes(process.env.S3_BUCKET_NAME)) return key;
+  if (key.startsWith('http') && !key.includes(process.env.AWS_BUCKET_NAME)) return key;
   
   // Extract key if it's a full S3 URL
   const s3Key = key.includes('amazonaws.com/') ? key.split('amazonaws.com/')[1] : key;
 
   const command = new GetObjectCommand({
-    Bucket: process.env.S3_BUCKET_NAME,
+    Bucket: process.env.AWS_BUCKET_NAME,
     Key: s3Key,
   });
 
@@ -32,7 +32,7 @@ const getSignedImageUrl = async (key) => {
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: process.env.S3_BUCKET_NAME,
+    bucket: process.env.AWS_BUCKET_NAME,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb) {
       const fileName = `avatars/${req.user.userId}-${Date.now()}${path.extname(file.originalname)}`;

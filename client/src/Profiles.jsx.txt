@@ -16,7 +16,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/users/profile");
+        const res = await fetch('${http://import.meta.env.VITE_API_URL}/api/users/profile');
         const data = await res.json();
 
         setFormData({
@@ -49,7 +49,7 @@ export default function Profile() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/users/profile", {
+      const res = await fetch('${import.meta.env.VITE_API_URL}/api/users/profile', {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

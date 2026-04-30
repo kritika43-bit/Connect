@@ -62,9 +62,9 @@ export default function Login() {
                   type="email"
                   required
                   className="appearance-none block w-full pl-10 pr-3 py-3 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white/50 backdrop-blur-sm"
-                  placeholder="alumni@university.edu"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoFocus
                 />
               </div>
             </div>
@@ -78,7 +78,6 @@ export default function Login() {
                   type="password"
                   required
                   className="appearance-none block w-full pl-10 pr-3 py-3 border border-secondary-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white/50 backdrop-blur-sm"
-                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

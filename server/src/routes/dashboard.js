@@ -1,10 +1,9 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prisma');
 const jwt = require('jsonwebtoken');
 const { getSignedImageUrl } = require('../utils/upload');
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Auth middleware
 const authenticate = (req, res, next) => {

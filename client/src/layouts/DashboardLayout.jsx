@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { 
   Home, User, Users, Briefcase, Calendar, 
-  MessageSquare, Bell, Settings, ShieldAlert, LogOut 
+  MessageSquare, Settings, ShieldAlert, LogOut 
 } from 'lucide-react';
 
 const DashboardLayout = () => {
@@ -16,7 +16,6 @@ const DashboardLayout = () => {
     { name: 'Jobs', path: '/dashboard/jobs', icon: <Briefcase size={20} /> },
     { name: 'Events', path: '/dashboard/events', icon: <Calendar size={20} /> },
     { name: 'Posts', path: '/dashboard/posts', icon: <MessageSquare size={20} /> },
-    { name: 'Notifications', path: '/dashboard/notifications', icon: <Bell size={20} /> },
     { name: 'Settings', path: '/dashboard/settings', icon: <Settings size={20} /> },
   ];
 

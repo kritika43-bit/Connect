@@ -1,10 +1,9 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prisma');
 const jwt = require('jsonwebtoken');
 // Note: S3/Multer setup is typically added here for imageUrl uploads.
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 const authenticate = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];

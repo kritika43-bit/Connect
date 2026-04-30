@@ -2,11 +2,9 @@ import axios from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api`,
 });
+
 
 // Add a request interceptor to automatically attach the token
 api.interceptors.request.use(

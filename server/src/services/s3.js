@@ -15,7 +15,7 @@ const s3Config = new S3Client({
 const upload = multer({
   storage: multerS3({
     s3: s3Config,
-    bucket: process.env.S3_BUCKET_NAME || 'your_bucket_name',
+    bucket: process.env.AWS_BUCKET_NAME || 'your_bucket_name',
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req, file, cb) {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);

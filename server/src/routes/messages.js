@@ -1,10 +1,9 @@
 const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const prisma = require('../utils/prisma');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 // Email transporter configuration
 const sendEmailNotification = async (to, senderName, content) => {
